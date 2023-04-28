@@ -58,27 +58,35 @@ Y_data = df['province_confirmedCount'].values.reshape(-1, 1)
 plt.figure(figsize=(10, 6))
 plt.scatter(X_data, Y_data, color='blue', label='data')
 
+#创建训练时间统计数组
+time_list = []
+
 # 多项式模型建立与拟合
+time_list.append(time.time())
 pr = LinearRegression()
 quadratic = PolynomialFeatures(degree=2)
 X_quad = quadratic.fit_transform(X_data)
 pr.fit(X_quad, Y_data)
 Y_pred_quad = pr.predict(X_quad)
-
+time_list.append(time.time())
 plt.plot(X_data, Y_pred_quad, color='red', label='quadratic')
 
 # 指数形式的线性回归模型建立与拟合
+time_list.append(time.time())
 elr = LinearRegression()
 elr.fit(X_data, np.log1p(Y_data))
 Y_pred_exp = np.exp(elr.predict(X_data))
+time_list.append(time.time())
 plt.plot(X_data, Y_pred_exp, color='green', label='exp')
 
 """我们还可以尝试将多项式和指数模型进行集成，这样可以解决二者在部分区域拟合不好的问题"""
 
 # 随机森林回归模型建立与拟合
+time_list.append(time.time())
 rfr = RandomForestRegressor(n_estimators=100, max_depth=3)
 rfr.fit(X_data, Y_data)
 Y_pred_rfr = rfr.predict(X_data)
+time_list.append(time.time())
 plt.plot(X_data, Y_pred_rfr, color='orange', label='rfr')
 
 # 设置图例和标签
@@ -86,6 +94,11 @@ plt.legend(loc='upper left')
 plt.xlabel('minutes')
 plt.ylabel('confirmed')
 plt.show()
+
+#统计训练时间,单位为ms
+print('多项式训练时间：', (time_list[1] - time_list[0]) * 1000)
+print('指数训练时间：', (time_list[3] - time_list[2]) * 1000)
+print('随机森林训练时间：', (time_list[5] - time_list[4]) * 1000)
 
 # %% 交叉验证
 mse1 = cross_val_score(rfr, X_data, Y_data, scoring='neg_mean_squared_error', cv=5)
@@ -139,7 +152,10 @@ plt.show()
 X_data = df['updateTimeM'].values.reshape(-1, 1)
 Y_data = df['province_curedCount'].values.reshape(-1, 1)
 
+time_list.clear()
+
 # 选择多项式回归模型
+time_list.append(time.time())
 poly = PolynomialFeatures(degree=2)
 X_data_poly = poly.fit_transform(X_data)
 pr = LinearRegression()
@@ -148,19 +164,30 @@ plt.figure(figsize=(10, 6))
 plt.scatter(X_data, Y_data, color='blue', label='data')
 X_data_poly = poly.fit_transform(X_data)
 Y_pred_poly = pr.predict(X_data_poly)
+time_list.append(time.time())
 plt.plot(X_data, Y_pred_poly, color='green', label='polynomial linear regression')
 
 # 选择指数回归模型
+time_list.append(time.time())
 elr = LinearRegression()
 elr.fit(X_data, np.log1p(Y_data))
 Y_pred_exp = np.exp(elr.predict(X_data))
-plt.plot(X_data, Y_pred_exp, color='red', label='exponential linear regression')
+time_list.append(time.time())
+# plt.plot(X_data, Y_pred_exp, color='red', label='exponential linear regression')
 
 # 随机森林回归
+time_list.append(time.time())
 rfr = RandomForestRegressor()
 rfr.fit(X_data, Y_data)
 Y_pred_rfr = rfr.predict(X_data)
+time_list.append(time.time())
 plt.plot(X_data, Y_pred_rfr, color='yellow', label='random forest regression')
+
+#统计时间,单位为ms
+print('多项式回归耗时：', (time_list[1] - time_list[0]) * 1000)
+print('指数回归耗时：', (time_list[3] - time_list[2]) * 1000)
+print('随机森林回归耗时：', (time_list[5] - time_list[4]) * 1000)
+
 
 # 绘制图形
 plt.xlabel('minutes')

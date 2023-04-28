@@ -1,3 +1,6 @@
+import time
+
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import Ridge, SGDRegressor, LinearRegression
@@ -69,6 +72,9 @@ def main():
 
     for name, model, params in models_and_params:
         print(f"Searching for best parameters of {name}...")
+
+        start_time = time.time()  # 记录开始时间
+
         grid_search = GridSearchCV(model, params, cv=10, scoring=scoring, refit='mse', return_train_score=True)
         grid_search.fit(X_train_full, y_train_full)
 
@@ -82,8 +88,14 @@ def main():
             best_params = grid_search.best_params_
             best_model = grid_search.best_estimator_
 
-    print(
-        f"Best model: {best_model}, Best parameters: {best_params}, Best MSE: {best_mse:.4f}, Best R^2: {best_r2:.4f}")
+        end_time = time.time()  # 记录结束时间
+        training_time = end_time - start_time  # 计算训练时间
+        joblib.dump({name}, f"{name}.pkl")
+        #输出单位为ms
+        print(f"Training time for {name}: {training_time * 1000:.2f} ms")
+
+    print(f"Best model: {best_model}, Best parameters: {best_params}, Best MSE: {best_mse:.4f}, Best R^2: {best_r2:.4f}")
+
 
 
 if __name__ == "__main__":
