@@ -1,34 +1,75 @@
-"""
-Averaged One-Dependence Estimators (AODE) classifier is an improvement over naive Bayes classifier, which allows
-dependencies between attributes and uses conditional averaging to estimate these dependencies. Here are some steps to
-implement the AODE classifier:
+import numpy as np
+from collections import defaultdict
+from typing import List, Tuple
 
-1.Read the dataset, extract the attribute names and class names, and discretize the attribute values.
-2.For each attribute, calculate the joint probability of each value with the class and store them in a dictionary.
-3.For each pair of attributes (different combinations of two attributes), calculate their joint probability with the
-class and store them in a dictionary.
-4.For each test sample, substitute its attribute values into the probability formulas,
-calculate their joint probabilities with each class, and calculate posterior probabilities using Bayes' theorem.
-5.Determine the class to which the test sample belongs based on its posterior probability.
-"""
 
-# 读取数据集
-data = read_data("dataset.csv")
+class AODE:
 
-# 对属性值进行离散化处理
-discretize(data)
+    def __init__(self, min_samples: int = 1):
+        self.class_freqs = defaultdict(int)  # 用于存储类别的频率
+        self.cond_freqs = defaultdict(int)  # 用于存储条件频率
+        self.min_samples = min_samples  # 设定的最小样本数，对于一个属性，如果它在某个类别下的样本数少于该值，则不使用它来做预测
 
-# 提取属性名称和类别名称
-attributes = get_attributes(data)
-classes = get_classes(data)
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        """
+        使用输入的训练数据训练模型。
 
-# 计算属性的类条件概率
-attribute_probs = calculate_attribute_probs(data, attributes, classes)
+        Args:
+            X (np.ndarray): 输入样本。
+            y (np.ndarray): 样本标签。
+        """
+        # 遍历数据，计算类别的频率和条件频率
+        for xi, yi in zip(X, y):
+            self.class_freqs[yi] += 1
+            for attr, val in enumerate(xi):
+                self.cond_freqs[(attr, val, yi)] += 1
 
-# 计算属性对的类条件概率
-pair_probs = calculate_pair_probs(data, attributes, classes)
+    def predict(self, X: np.ndarray) -> List:
+        """
+        使用模型对输入样本进行预测。
 
-# 对测试样本进行分类
-test_sample = ['青绿', '蜷缩', '浊响', '清晰', '凹陷', '硬滑', '0.697', '0.460']
-predicted_class = classify(test_sample, attribute_probs, pair_probs, classes)
-print(predicted_class)
+        Args:
+            X (np.ndarray): 输入样本。
+
+        Returns:
+            List: 预测结果列表。
+        """
+        # 对每个样本，计算每个类别的概率，并选择最大的
+        y_pred = []
+        for xi in X:
+            max_prob = -1
+            max_class = None
+            for yi in self.class_freqs.keys():
+                if self.class_freqs[yi] >= self.min_samples:
+                    prob = self.class_freqs[yi]
+                    for attr, val in enumerate(xi):
+                        prob *= self.cond_freqs.get((attr, val, yi), 1)
+                    if prob > max_prob:
+                        max_prob = prob
+                        max_class = yi
+            y_pred.append(max_class)
+        return y_pred
+
+
+if __name__ == '__main__':
+    # 使用示例：
+    from sklearn.datasets import load_breast_cancer
+    from sklearn.model_selection import train_test_split
+
+    # 加载数据
+    data = load_breast_cancer()
+    X = data.data
+    y = data.target
+
+    # 划分训练集和测试集
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 训练模型
+    aode = AODE()
+    aode.fit(X_train, y_train)
+
+    # 预测
+    y_pred = aode.predict(X_test)
+
+    # 输出预测准确率
+    print("Accuracy: ", np.mean(y_pred == y_test))
