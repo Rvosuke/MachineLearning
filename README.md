@@ -1,24 +1,31 @@
 # Machine Learning Repository
 
-Welcome to the Machine Learning (ML) repository! This repository contains various projects and exercises that I've completed during my machine learning journey. The main purpose of this repository is to showcase my skills and understanding of machine learning concepts and techniques, as well as to provide examples and inspiration for others who are learning or working in this field.
+本仓库主要存放我自己手动实现的一些算法（Algorithm）和我进行的数据挖掘实践工作（DataMining）。
 
-## Environment and Dependencies
+## 内容介绍
 
-- Python 3.6
-- NumPy
-- pandas
-- Matplotlib
-- scikit-learn
-- SciPy
+- **Algorithm**：这部分包含了一系列手动实现的各类算法，如支持向量机、决策树、贝叶斯分类器等。所有的算法都尽可能的进行了优化，以确保它们的性能。
 
-## Completed Projects
+- **DataMining**：这部分包括一些我在实践中完成的数据挖掘项目。这些项目主要包括数据预处理、探索性数据分析、模型构建、模型评估等步骤。
 
-1. **Titanic Survival Prediction (Kaggle)**: In this project, I built a predictive model to determine the survival of passengers on the Titanic using various machine learning algorithms such as logistic regression, decision trees, and random forests. Feature engineering, data preprocessing, and model evaluation techniques were applied to improve the model's performance.
+## 安装
 
-2. **Horse Colic Missing Data Handling**: This project focused on handling missing data in the Horse Colic dataset. I applied various imputation techniques, including mean and median imputation, and k-nearest neighbors imputation. The effectiveness of these techniques was evaluated by comparing the performance of machine learning models trained on the imputed datasets.
+要运行这些代码，您需要在您的计算机上安装Python以及一些必要的Python库。可以通过以下命令安装：
 
-3. **ID3 Decision Tree Construction**: In this project, I implemented the ID3 decision tree algorithm from scratch to gain a deeper understanding of the inner workings of decision tree algorithms. I also compared the performance of the custom-built ID3 algorithm with scikit-learn's built-in decision tree classifier.
+```
+pip install numpy pandas scikit-learn matplotlib
+```
 
-4. **Linear Regression Analysis of Prostate Cancer**: This project involved the application of linear regression techniques to the Prostate Cancer dataset. I used ordinary least squares, gradient descent, and stochastic gradient descent methods to build predictive models, and evaluated their performance using mean squared error and residual plots. I also applied cross-validation and hyperparameter tuning to improve the performance of the stochastic gradient descent model.
+## 使用
 
-Feel free to explore the repository and use the code in your own projects. If you have any questions or suggestions, please don't hesitate to reach out. Happy learning!
+1. 克隆这个仓库到你的本地环境
+2. 在命令行中导航到仓库目录
+3. 运行Python文件。例如：
+
+```
+python3 filename.py
+```
+
+## 贡献
+
+欢迎所有人对这个项目提出改进建议或提交代码。如果您有任何问题，也欢迎通过"Issues"进行提问。
