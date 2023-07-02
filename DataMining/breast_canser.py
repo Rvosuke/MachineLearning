@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 from Algrithm.relief import Relief
-from Algrithm.BayesDecision.AODE import AODE
+from Algrithm.BayesDecision.aode import AODE
 
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import KFold

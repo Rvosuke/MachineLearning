@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import stats
 
-from navieBayes import text, attributes_len, is_float, attributes_count_list, guess_means, guess_stds, guess_index, \
+from navie_bayes import text, attributes_len, is_float, attributes_count_list, guess_means, guess_stds, guess_index, \
     class_name
 
 test = ['青绿', '蜷缩', '清脆', '清晰', '凹陷', '硬滑', '0.697', '0.460', '?']

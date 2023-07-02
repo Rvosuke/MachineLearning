@@ -6,7 +6,7 @@ import numpy as np
 from collections import Counter
 
 # 需求不同，这里采取稍微不同的打开方式
-with open('../BayesDecision/data_3.0.txt', mode='r', encoding='utf-8') as f:
+with open('../../res/data_3.0.txt', mode='r', encoding='utf-8') as f:
     attributes_labels = f.readline().strip().split(',')
     # 只读取前三个属性
     attributes_labels = attributes_labels[1: 4] + attributes_labels[-1:]  # 选取前三个属性和最后一个类别
